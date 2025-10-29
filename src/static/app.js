@@ -48,9 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Authentication state
   let currentUser = null;
 
-  // Dark mode state
-  let isDarkMode = false;
-
   // Time range mappings for the dropdown
   const timeRanges = {
     morning: { start: "06:00", end: "08:00" }, // Before school hours
@@ -58,33 +55,30 @@ document.addEventListener("DOMContentLoaded", () => {
     weekend: { days: ["Saturday", "Sunday"] }, // Weekend days
   };
 
-  // Initialize dark mode from localStorage
-  function initializeDarkMode() {
-    const savedDarkMode = localStorage.getItem("darkMode");
-    if (savedDarkMode === "enabled") {
-      isDarkMode = true;
+  // Update dark mode UI
+  function updateDarkModeUI(enabled) {
+    if (enabled) {
       document.body.classList.add("dark-mode");
       darkModeIcon.textContent = "☀️";
     } else {
-      isDarkMode = false;
       document.body.classList.remove("dark-mode");
       darkModeIcon.textContent = "🌙";
     }
   }
 
+  // Initialize dark mode from localStorage
+  function initializeDarkMode() {
+    const savedDarkMode = localStorage.getItem("darkMode");
+    updateDarkModeUI(savedDarkMode === "enabled");
+  }
+
   // Toggle dark mode
   function toggleDarkMode() {
-    isDarkMode = !isDarkMode;
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    const newState = !isDarkMode;
     
-    if (isDarkMode) {
-      document.body.classList.add("dark-mode");
-      darkModeIcon.textContent = "☀️";
-      localStorage.setItem("darkMode", "enabled");
-    } else {
-      document.body.classList.remove("dark-mode");
-      darkModeIcon.textContent = "🌙";
-      localStorage.setItem("darkMode", "disabled");
-    }
+    updateDarkModeUI(newState);
+    localStorage.setItem("darkMode", newState ? "enabled" : "disabled");
   }
 
   // Dark mode toggle event listener
